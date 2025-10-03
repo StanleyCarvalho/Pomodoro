@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Técnica de Pomodoro</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Técnica de Pomodoro</h1>
+  </header>
+
+  <div class="app" id="appRoot">
+
+    <!-- POMODORO -->
+    <section class="card" id="pomodoroCard">
+      <div class="circle">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#06b6d4"/>
+              <stop offset="100%" stop-color="#06d6a0"/>
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="85"></circle>
+          <circle id="progressCircle" cx="100" cy="100" r="85" stroke="url(#g1)"></circle>
+        </svg>
+        <div class="time" id="timerDisplay">25:00</div>
+      </div>
+
+      <div class="status" id="statusText">Modo: Foco 💡</div>
+
+      <div class="controls">
+        <button id="startBtn"><i data-lucide="play"></i>Iniciar</button>
+        <button id="pauseBtn" class="ghost"><i data-lucide="pause"></i>Pausar</button>
+        <button id="resetBtn" class="secondary"><i data-lucide="rotate-ccw"></i>Resetar</button>
+      </div>
+
+      <h2>📊 Histórico</h2>
+      <ul id="historyList"></ul>
+    </section>
+
+    <!-- CRONOGRAMA -->
+    <section class="card" id="scheduleCard">
+      <form id="studyForm">
+        <input id="taskInput" type="text" placeholder="Matéria (ex: Álgebra)" required>
+        <input id="timeInput" type="time" required>
+        <button type="submit" class="secondary"><i data-lucide="plus-circle"></i>Adicionar</button>
+      </form>
+
+      <ul id="scheduleList" class="schedule-list"></ul>
+    </section>
+  </div>
+
+  <footer>
+  &copy; 03-10-2025 <a href="https://github.com/StanleyCarvalho" target="_blank">Github Stanley</a> - Desenvolvido por Stanley
+</footer>
+
+  <audio id="beepAudio" src="alert.mp3" preload="auto"></audio>
+  <script src="script.js"></script>
+</body>
+</html>

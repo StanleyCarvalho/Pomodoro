@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   let schedule=JSON.parse(localStorage.getItem('studySchedule')||'[]');
   let history=JSON.parse(localStorage.getItem('pomodoroHistory')||'[]');
 
-  /*Variáveis para o timer persistente*/
   let startTime = null;
   let endTime = null;
 
@@ -79,9 +78,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   function renderHistory(){
     historyList.innerHTML='';
     if(history.length===0){ historyList.innerHTML='<li class="muted">Nenhum ciclo concluído</li>'; return; }
-    history.forEach(h=>{
-      const li=document.createElement('li'); li.className='item';
-      li.innerHTML=`<span>${h.text}</span><small>${h.ts}</small>`;
+    history.forEach((h, idx)=>{
+      const li=document.createElement('li'); 
+      li.className='item';
+      li.innerHTML=`
+        <span>${h.text}</span>
+        <small>${h.ts}</small>
+        <button class="small-btn warn" data-idx="${idx}" data-action="remove">❌</button>
+      `;
       historyList.appendChild(li);
     });
   }
@@ -94,9 +98,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     startBtn.disabled = true; 
     pauseBtn.disabled = false;
 
-    /*Registrar horário de início e fim*/
     startTime = Date.now();
-    const duration = timeLeft * 1000; /*milissegundos*/
+    const duration = timeLeft * 1000;
     endTime = startTime + duration;
 
     timer = setInterval(() => {
@@ -110,7 +113,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         addHistory(isFocus ? 'Ciclo de Foco concluído ✅' : 'Pausa concluída ☕');
         isFocus = !isFocus;
         timeLeft = (isFocus ? focusMinutes : breakMinutes) * 60;
-        startTimer(); /*iniciar próximo ciclo automaticamente*/
+        startTimer();
       } else {
         updateDisplay();
       }
@@ -124,7 +127,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     startBtn.disabled = false;
     pauseBtn.disabled = true;
 
-    /*Ajustar timeLeft para reiniciar corretamente*/
     const now = Date.now();
     timeLeft = Math.round((endTime - now) / 1000);
   }
@@ -146,9 +148,17 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   scheduleList.addEventListener('click',e=>{
     const btn=e.target.closest('button'); if(!btn) return;
-    const action=btn.dataset.action,idx=+btn.dataset.idx;
+    const action=btn.dataset.action, idx=+btn.dataset.idx;
     if(action==='start'){ resetTimer(); startTimer(); addHistory(`Iniciado: ${schedule[idx].task}`); }
     else if(action==='remove'){ schedule.splice(idx,1); saveSchedule(); renderSchedule(); }
+  });
+
+  historyList.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const action = btn.dataset.action;
+    const idx = +btn.dataset.idx;
+    if(action === 'remove'){ history.splice(idx,1); saveHistory(); renderHistory(); }
   });
 
   startBtn.addEventListener('click',startTimer);
